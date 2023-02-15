@@ -41,6 +41,14 @@
 
 -- COMMAND ----------
 
+-- MAGIC %py dbutils.fs.ls('dbfs:/mnt/')
+
+-- COMMAND ----------
+
+-- MAGIC %py dbutils.fs.ls('dbfs:/mnt/dbacademy-datasets/data-engineering-with-databricks/v02/ecommerce/raw/events-kafka')
+
+-- COMMAND ----------
+
 -- MAGIC %md <i18n value="3b9c0755-bf72-480e-a836-18a4eceb97d2"/>
 -- MAGIC 
 -- MAGIC 

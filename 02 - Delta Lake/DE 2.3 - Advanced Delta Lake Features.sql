@@ -61,15 +61,55 @@ INSERT INTO students VALUES (1, "Yve", 1.0);
 INSERT INTO students VALUES (2, "Omar", 2.5);
 INSERT INTO students VALUES (3, "Elia", 3.3);
 
+
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC display(dbutils.fs.ls(f"{DA.paths.user_db}/students"))
+
+-- COMMAND ----------
+
+SELECT * FROM students
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC display(dbutils.fs.ls(f"{DA.paths.user_db}/students/_delta_log"))
+
+-- COMMAND ----------
+
 INSERT INTO students
 VALUES 
   (4, "Ted", 4.7),
   (5, "Tiffany", 5.5),
   (6, "Vini", 6.3);
   
+
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC display(dbutils.fs.ls(f"{DA.paths.user_db}/students"))
+
+-- COMMAND ----------
+
 UPDATE students 
 SET value = value + 1
 WHERE name LIKE "T%";
+
+
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC display(dbutils.fs.ls(f"{DA.paths.user_db}/students/"))
+
+-- COMMAND ----------
+
+OPTIMIZE students
+
+-- COMMAND ----------
 
 DELETE FROM students 
 WHERE value > 6;
@@ -164,7 +204,7 @@ DESCRIBE DETAIL students
 -- MAGIC %md <i18n value="1bcbb8d1-f871-451a-ad16-762dfa91c0a3"/>
 -- MAGIC 
 -- MAGIC 
--- MAGIC Each transaction results in a new JSON file being written to the Delta Lake transaction log. Here, we can see that there are 8 total transactions against this table (Delta Lake is 0 indexed).
+-- MAGIC Each transaction results in a new  file being written to the Delta Lake transaction log. Here, we can see that there are 8 total transactions against this table (Delta Lake is 0 indexed).
 
 -- COMMAND ----------
 

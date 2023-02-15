@@ -67,6 +67,14 @@
 
 -- COMMAND ----------
 
+drop table beans
+
+-- COMMAND ----------
+
+Create table beans ( name String, color String, grams Float, delicious Boolean)
+
+-- COMMAND ----------
+
 -- MAGIC %md <i18n value="2167d7d7-93d1-4704-a7cb-a0335eaf8da7"/>
 -- MAGIC 
 -- MAGIC 
@@ -108,6 +116,10 @@ INSERT INTO beans VALUES
 
 -- TODO
 <FILL-IN>
+
+-- COMMAND ----------
+
+
 
 -- COMMAND ----------
 
