@@ -78,6 +78,10 @@
 
 # COMMAND ----------
 
+print(data_source)
+
+# COMMAND ----------
+
 def autoload_to_table(data_source, source_format, table_name, checkpoint_directory):
     query = (spark.readStream
                   .format("cloudFiles")
@@ -126,6 +130,11 @@ query = autoload_to_table(data_source = f"{DA.paths.working_dir}/tracker",
 # MAGIC Our notebook-based lessons combine streaming functions with batch and streaming queries against the results of those operations. These notebooks are for instructional purposes and intended for interactive, cell-by-cell execution. This pattern is not intended for production.
 # MAGIC 
 # MAGIC Below, we define a helper function that prevents our notebook from executing the next cell just long enough to ensure data has been written out by a given streaming query. This code should not be necessary in a production job.
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC SELECT count(*) FROM target_table
 
 # COMMAND ----------
 
