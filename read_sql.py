@@ -1,12 +1,12 @@
 # Databricks notebook source
-jdbcHostname = "rstestsv.database.windows.net"
-jdbcDatabase = "testdb"
+jdbcHostname = "tst-db.database.windows.net"
+jdbcDatabase = "tst-db"
 jdbcPort = 1433
 jdbcUrl = f"jdbc:sqlserver://{jdbcHostname}:{jdbcPort};database={jdbcDatabase}".format(jdbcHostname, jdbcPort, jdbcDatabase)
 
 connectionProperties = {
-  "user" : "sraja3@rstestsv",
-  "password" : "Jan@2012#",
+  "user" : "dbadmin@tst-db",
+  "password" : dbutils.secrets.get(scope="aztst-scope",key="tst-db-admin"),
   "driver" : "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 }  
 
@@ -27,8 +27,9 @@ display(df)
 
 # COMMAND ----------
 
-sc=df.join(df1,df['CustomerID']==df1['CustomerID'],"inner").select(df['CustomerID'],'SalesOrderID','OrderDate','SalesOrderNumber','status','SubTotal','TaxAmt','Freight','TotalDue')
-display(sc)
+sc=df.join(df1,df['CustomerID']==df1['CustomerID'],"inner").select(df['CustomerID'],\
+'SalesOrderID','OrderDate','SalesOrderNumber','status','SubTotal','TaxAmt','Freight','TotalDue')
+sc.show()
 
 # COMMAND ----------
 
@@ -40,9 +41,14 @@ import pyspark.sql.functions as F
 
 LO_SOL = df2.groupby('SalesOrderID').agg(F.sum('LineTotal').alias("LOT")).sort('SalesOrderID')
 
+LO_SOL.display()
+
+
 # COMMAND ----------
 
-CU_Sales=sc.join(LO_SOL,sc['SalesOrderID']==LO_SOL['SalesOrderID'],"inner").select('CustomerID',sc['SalesOrderID'],sc['OrderDate'],'status','SubTotal','TaxAmt','Freight','TotalDue','LOT')
+CU_Sales=sc.join(LO_SOL,sc['SalesOrderID']==LO_SOL['SalesOrderID'],"inner").\
+select('CustomerID',sc['SalesOrderID'],sc['OrderDate'],'status','SubTotal','TaxAmt','Freight','TotalDue','LOT')
+CU_Sales.display()
 
 # COMMAND ----------
 
@@ -50,7 +56,7 @@ display(CU_Sales.sort('CustomerID',ascending = True))
 
 # COMMAND ----------
 
-CU_Sales.write.format('delta').mode("overwrite").save('/output/sales')
+CU_Sales.write.format('delta').mode("overwrite").save('/output/cusales')
 
 # COMMAND ----------
 
@@ -77,8 +83,7 @@ CU_Sales = CU_Sales.withColumn("Tot_Sal",col('SubTotal')+col('TaxAmt'))
 
 from pyspark.sql.functions import col
 
-CU_Sales = CU_Sales.withColumn("Diff",(col('Tot_Sal')/col('TotalDue')*100)).withColumn("Tot_Frit",(col('SubTotal')+col('TaxAmt')+col('Freight')))
-
+CU_Sales = CU_Sales.withColumn("Diff",(col('Tot_Sal')/col('TotalDue')*100)).withColumn("Tot_Due",(col('SubTotal')+col('TaxAmt')+col('Freight')))
 
 
 
